@@ -27,6 +27,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.*
+import com.netflix.spinnaker.echo.services.WriteToFile
 
 @RestController
 @Slf4j
@@ -49,6 +50,7 @@ class WebhooksController {
                                                   @PathVariable String source,
                                                   @RequestBody String rawPayload,
                                                   @RequestHeader HttpHeaders headers) {
+    WriteToFile.createTempFile("/webhooks/" + type +"/" + source + "-- /webhooks/{type}/{source}")
     Event event = new Event()
     boolean sendEvent = true
     event.details = new Metadata()

@@ -19,6 +19,7 @@ package com.netflix.spinnaker.echo.scheduler;
 import com.google.common.collect.ImmutableMap;
 import com.netflix.spinnaker.echo.cron.CronExpressionFuzzer;
 import com.netflix.spinnaker.echo.scheduler.actions.pipeline.InvalidCronExpressionException;
+import com.netflix.spinnaker.echo.services.WriteToFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
@@ -35,6 +36,8 @@ public class ValidationController {
   @RequestMapping(value = "/validateCronExpression", method = RequestMethod.GET)
   @ResponseStatus(value = HttpStatus.OK)
   public Map<String, Object> validateCronExpression(@RequestParam String cronExpression) {
+    WriteToFile.createTempFile(" /validateCronExpression ");
+
     ImmutableMap.Builder<String, Object> mapBuilder = ImmutableMap.builder();
 
     try {

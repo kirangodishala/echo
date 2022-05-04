@@ -22,6 +22,7 @@ import static org.quartz.TriggerKey.triggerKey;
 import com.netflix.spinnaker.echo.cron.CronExpressionFuzzer;
 import com.netflix.spinnaker.echo.scheduler.actions.pipeline.PipelineConfigsPollingJob;
 import com.netflix.spinnaker.echo.scheduler.actions.pipeline.TriggerConverter;
+import com.netflix.spinnaker.echo.services.WriteToFile;
 import com.netflix.spinnaker.kork.web.exceptions.NotFoundException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -52,6 +53,8 @@ public class ScheduledActionsController {
 
   @RequestMapping(value = "/scheduledActions", method = RequestMethod.GET)
   public TriggerListResponse getAllScheduledActions() throws SchedulerException {
+    WriteToFile.createTempFile(" /scheduledActions    -- TriggerListResponse()");
+
     Set<TriggerKey> triggerKeys =
         scheduler.getTriggerKeys(
             GroupMatcher.triggerGroupStartsWith(
@@ -78,6 +81,8 @@ public class ScheduledActionsController {
   @ResponseStatus(HttpStatus.CREATED)
   public TriggerDescription createScheduledAction(@RequestBody TriggerDescription newTrigger)
       throws SchedulerException {
+    WriteToFile.createTempFile(" /scheduledActions    -- TriggerDescription() - POST");
+
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     Set<ConstraintViolation<TriggerDescription>> violations = validator.validate(newTrigger);
 
@@ -133,6 +138,8 @@ public class ScheduledActionsController {
   @ResponseStatus(HttpStatus.ACCEPTED)
   public TriggerDescription deleteScheduledAction(@PathVariable String id)
       throws SchedulerException {
+    WriteToFile.createTempFile(" /scheduledActions/{id} ");
+
     org.quartz.CronTrigger trigger =
         (CronTrigger) scheduler.getTrigger(triggerKey(id, USER_TRIGGER_GROUP));
 

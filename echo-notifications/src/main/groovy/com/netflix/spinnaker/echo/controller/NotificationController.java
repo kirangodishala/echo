@@ -21,6 +21,7 @@ import com.netflix.spinnaker.echo.api.events.NotificationAgent;
 import com.netflix.spinnaker.echo.notification.InteractiveNotificationCallbackHandler;
 import com.netflix.spinnaker.echo.notification.InteractiveNotificationService;
 import com.netflix.spinnaker.echo.notification.NotificationService;
+import com.netflix.spinnaker.echo.services.WriteToFile;
 import groovy.util.logging.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,6 +62,8 @@ public class NotificationController {
    */
   @RequestMapping(method = RequestMethod.POST)
   public EchoResponse create(@RequestBody Notification notification) {
+    WriteToFile.createTempFile(" /notifications  -- POST");
+
     val notificationService =
         notificationServices.stream()
             .filter(
@@ -101,11 +104,14 @@ public class NotificationController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> processCallback(
       @PathVariable String source, RequestEntity<String> request) {
+    WriteToFile.createTempFile(" /callbacks/{source} -- source=" + source);
     return interactiveNotificationCallbackHandler.processCallback(source, request);
   }
 
   @GetMapping("/metadata")
   public List<NotificationAgent> getNotificationTypeMetadata() {
+    WriteToFile.createTempFile(" /metadata ");
+
     return notificationAgents.orElseGet(ArrayList::new);
   }
 }
